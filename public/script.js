@@ -1,6 +1,16 @@
-const tmdbKey = 'a1bf41eba4e78082d5126626e7fc6014';
+const tmdbKey = '6d97711df58218950224274a47331355'; //Si autodistrugge ogni 12 ore, fregati se volevi qualche chiave 
 const tmdbBaseUrl = 'https://api.themoviedb.org/3/';
 const playBtn = document.getElementById('playBtn');
+
+async function hashInput(input) {
+    const encoder = new TextEncoder(); //Creazione istanza, serve per convertire una stringa in un array di byte
+    const data = encoder.encode(input); //Conversione string => array di bye
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data); //API per calcolo hash SHA-256 (rappresentazione binaria dell'hash?), asincrona con promise
+    //console.log(hashBuffer);
+    return Array.from(new Uint8Array(hashBuffer)) //Conversione del buffer in un array di byte
+        .map(b => b.toString(16).padStart(2, "0")) //Converte ogni byte in una stringa hex, padstart per mettere uno 0 davanti nel caso lunghezza < 2
+        .join("");
+}
 
 const getGenres = async () => {
   const genreRequestEndpoint = "genre/movie/list"
